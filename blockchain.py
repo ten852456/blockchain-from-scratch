@@ -1,6 +1,7 @@
 import datetime
 import hashlib
 import json
+from flask import Flask, jsonify
 
 class Blockchain :
     def __init__(self):
@@ -36,5 +37,24 @@ class Blockchain :
                 new_nounce +=1
         return new_nounce
 
+#web server
+app = Flask(__name__)
+
 blockchain = Blockchain()
-print(blockchain.hash(blockchain.chain[0]))
+
+#routing
+@app.route('/')
+def hello():
+    return "<p>hello world</p>"
+
+@app.route('/get_chain')
+def get_chain():
+    response={
+        "chain": blockchain.chain,
+        "length": len(blockchain.chain)
+    }
+    return jsonify(response),200
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
